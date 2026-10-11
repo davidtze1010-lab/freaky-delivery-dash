@@ -8,3 +8,4 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+- 3D game code lives in src/game/ (R3F); vite.config strips devtools data-tsd-source there because R3F crashes on that prop in dev.

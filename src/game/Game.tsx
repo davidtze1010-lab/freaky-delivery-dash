@@ -18,7 +18,7 @@ function HUD() {
       {g.phase === "play" && (
         <>
           <div className="absolute right-4 top-4 max-w-md rounded-md border border-border bg-card/80 p-4 backdrop-blur">
-            <div className="text-xs text-muted-foreground">הזמנה חדשה מ-MC FREAKY 🍔</div>
+            <div className="text-xs text-muted-foreground">הזמנה חדשה מ-MC FREAKY</div>
             <div className="mt-1 font-display text-xl text-primary">{g.address}</div>
             <div className="mt-2 text-sm text-muted-foreground">מרחק: {Math.round(g.dist)} מ׳ (בערך... אולי)</div>
           </div>

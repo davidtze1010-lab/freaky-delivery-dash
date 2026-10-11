@@ -31,7 +31,7 @@ function randomTarget() {
     : new THREE.Vector3(j * BLOCK + 10, 0, i * BLOCK);
 }
 
-function randomRoadPoint() {
+function randomRoadPoint(): [number, number] {
   const along = (Math.random() * 2 - 1) * 85;
   const line = (Math.floor(Math.random() * 9) - 4) * BLOCK + (Math.random() - 0.5) * 3;
   return Math.random() < 0.5 ? [line, along] : [along, line];
@@ -233,8 +233,8 @@ export function Scene() {
     confuse: 0,
     lastRun: -1,
   });
-  const [obstacles, setObstacles] = useState<number[][]>([]);
-  const obsRef = useRef<number[][]>([]);
+  const [obstacles, setObstacles] = useState<[number, number, number][]>([]);
+  const obsRef = useRef<[number, number, number][]>([]);
   const [creepOn, setCreepOn] = useState(false);
 
   useEffect(() => {
@@ -249,7 +249,10 @@ export function Scene() {
   }, []);
 
   const spawnObstacles = () => {
-    const a = Array.from({ length: 40 }, () => [...randomRoadPoint(), Math.floor(Math.random() * 3)]);
+    const a = Array.from({ length: 40 }, (): [number, number, number] => {
+      const [x, z] = randomRoadPoint();
+      return [x, z, Math.floor(Math.random() * 3)];
+    });
     obsRef.current = a;
     setObstacles(a);
   };
@@ -287,10 +290,10 @@ export function Scene() {
 
     if (st.phase === "play") {
       const k = keys.current;
-      const up = k.KeyW || k.ArrowUp;
-      const down = k.KeyS || k.ArrowDown;
-      const left = k.KeyA || k.ArrowLeft;
-      const right = k.KeyD || k.ArrowRight;
+      const up = k["KeyW"] || k["ArrowUp"];
+      const down = k["KeyS"] || k["ArrowDown"];
+      const left = k["KeyA"] || k["ArrowLeft"];
+      const right = k["KeyD"] || k["ArrowRight"];
       if (up) s.v += ACCEL * dt;
       if (down) s.v -= ACCEL * 1.4 * dt;
       s.v = THREE.MathUtils.clamp(s.v, -6, MAX);
@@ -310,7 +313,7 @@ export function Scene() {
       // obstacles
       const obs = obsRef.current;
       for (let i = 0; i < obs.length; i++) {
-        const o = obs[i];
+        const o = obs[i]!;
         if (Math.hypot(o[0] - s.pos.x, o[1] - s.pos.z) < 1.4) {
           thud();
           s.v = -s.v * 0.3;
@@ -365,7 +368,7 @@ export function Scene() {
     if (bike.current) {
       bike.current.position.copy(s.pos);
       bike.current.rotation.set(0, s.h, 0);
-      bike.current.rotateZ(-((keys.current.KeyD || keys.current.ArrowRight ? 1 : 0) - (keys.current.KeyA || keys.current.ArrowLeft ? 1 : 0)) * 0.25 * Math.min(1, Math.abs(s.v) / 10));
+      bike.current.rotateZ(-((keys.current["KeyD"] || keys.current["ArrowRight"] ? 1 : 0) - (keys.current["KeyA"] || keys.current["ArrowLeft"] ? 1 : 0)) * 0.25 * Math.min(1, Math.abs(s.v) / 10));
     }
     if (beacon.current) {
       beacon.current.position.copy(s.target);

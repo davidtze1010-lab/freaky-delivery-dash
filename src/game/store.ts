@@ -72,4 +72,4 @@ export const SCREAMS = [
   "אני רואה אותךךךךךך",
 ];
 
-export const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];
+export const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)]!;
